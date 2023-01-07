@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, devtools } from 'zustand/middleware';
 
 type FavoriteRepoStore = {
   favoriteReposIds: number[];
@@ -7,31 +7,28 @@ type FavoriteRepoStore = {
   removeFavoriteRepo: (id: number) => void;
 };
 
-export const useFavoriteRepoStore = create(
-  persist<FavoriteRepoStore>(
-    (set) => ({
-      // states
-      favoriteReposIds: [],
+const store = persist<FavoriteRepoStore>(
+  (set) => ({
+    clotes: ['jeans', 't-shirt', 'jacket'],
+    // states
+    favoriteReposIds: [],
 
-      // actions
-      addFavoriteRepo: (id: number) => {
-        set((state) => ({
-          ...state,
-          favoriteReposIds: [...state.favoriteReposIds, id],
-        }));
-      },
+    // actions
+    addFavoriteRepo: (id: number) =>
+      set((state) => ({
+        favoriteReposIds: [...state.favoriteReposIds, id],
+      })),
 
-      removeFavoriteRepo: (id: number) => {
-        set((state) => ({
-          ...state,
-          favoriteReposIds: state.favoriteReposIds.filter(
-            (repoId) => repoId !== id
-          ),
-        }));
-      },
-    }),
-    {
-      name: 'favoriteRepoStore',
-    }
-  )
+    removeFavoriteRepo: (id: number) =>
+      set((state) => ({
+        favoriteReposIds: state.favoriteReposIds.filter(
+          (repoId) => repoId !== id
+        ),
+      })),
+  }),
+  {
+    name: 'favoriteRepoStore',
+  }
 );
+
+export const useFavoriteRepoStore = create(devtools(store));
